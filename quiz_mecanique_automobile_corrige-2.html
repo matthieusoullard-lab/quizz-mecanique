@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Questionnaire mécanique automobile — corrigé du PDF</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f5f7;color:#17202a;margin:0}
+.wrap{max-width:900px;margin:auto;padding:22px}
+.card{background:#fff;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 2px 9px #0001}
+h1{margin-bottom:5px}.muted{color:#667085}
+.option{display:block;padding:11px;margin:8px 0;border:1px solid #d0d5dd;border-radius:9px;cursor:pointer}
+.option:hover{background:#f8fafc}.correct{border-color:#16a34a;background:#f0fdf4}.wrong{border-color:#dc2626;background:#fef2f2}
+input[type=text]{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:9px}
+.correction{display:none;margin-top:12px;padding:11px;border-radius:9px;background:#f8fafc}
+button{border:0;border-radius:9px;padding:12px 18px;background:#111827;color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:#e5e7eb;color:#111827;margin-left:8px}
+#result{font-size:1.1rem;font-weight:700}
+</style></head><body><div class="wrap">
+<h1>Questionnaire mécanique automobile</h1>
+<p class="muted">48 questions — questions et réponses reprises du PDF fourni.</p>
+<form id="quiz"></form>
+<div class="card" id="result">Clique sur « Corriger » quand tu as terminé.</div>
+<button onclick="grade();return false">Corriger</button>
+<button class="secondary" onclick="location.reload();return false">Recommencer</button>
+</div>
+<script>
+const data = [{"q": "Ma voiture a du mal à démarrer ?", "opts": ["Ampoule HS", "Batterie faible", "Pression de pneu trop faible"], "a": 1, "n": 1}, {"q": "J’ai laissé mes phares allumés toute la nuit dans le garage. Qu’est-ce que ça fait ?", "opts": ["Ma voiture risque de ne plus démarrer", "Le moteur est cassé"], "a": 0, "n": 2}, {"q": "Que signifie ce voyant ?", "opts": ["Une perte de pression de pneu", "Risque de casse moteur", "Une ampoule grillée"], "a": 0, "n": 3}, {"q": "Quel est ce voyant ?", "opts": ["Voyant air bag", "Voyant moteur", "Voyant pression pneu"], "a": 0, "n": 4}, {"q": "Quel est ce voyant ?", "opts": ["Voyant air bag", "Voyant pression pneu", "Voyant préchauffage"], "a": 2, "n": 5}, {"q": "Comment est-ce que je fais le niveau d’huile moteur ?", "opts": ["Jusqu’à ce que ça déborde", "Je regarde la jauge"], "a": 1, "n": 6}, {"q": "Si ma courroie de distribution casse :", "opts": ["Je continu à rouler", "J’appele le dépanneur", "Je mets du scotch", "Je me rends directement au garage"], "a": 1, "n": 7}, {"q": "Sur une voiture diesel, j’ai quel type de bougie ?", "opts": ["Bougie d’allumage", "Bougie d’anniversaire", "Bougie de refroidissement", "Bougie de préchauffage"], "a": 3, "n": 8}, {"q": "Qu’est ce qui permet à la boite de vitesse de transmettre la force aux roues ?", "opts": ["Une transmission", "Le piston", "Le vilebrequin"], "a": 0, "n": 9}, {"q": "Si je démarre ma voiture sans huile est-ce que j’abîme mon moteur ?", "opts": ["Oui il va casser", "Non juste un petit bruit", "Peut-être"], "a": 0, "n": 10}, {"q": "Qu’est ce qui permet de lancer le moteur ?", "opts": ["La boite de vitesse", "Le démarreur", "Le filtre à huile"], "a": 1, "n": 11}, {"q": "Où se situe le moteur sur une Twingo 3 ?", "opts": ["Sous le capot avant", "Dans le coffre", "Côté passager"], "a": 1, "n": 12}, {"q": "Qu’est-ce que je remets dans mon circuit de climatisation quand je fais une recharge de clim ?", "opts": ["De l’eau", "Du liquide réfrigérant", "Du gaz"], "a": 2, "n": 13}, {"q": "Comment je gonfle mes pneus de voiture ?", "opts": ["Je fais à la bouche", "Je regarde dans la portière", "Je gonfle à 250 bars directement"], "a": 1, "n": 14}, {"q": "Quel est ce voyant ?", "opts": ["Voyant huile", "Voyant de clim", "Voyant de frein"], "a": 2, "n": 15}, {"q": "Quel est ce voyant ?", "opts": ["Voyant air bag", "Voyant anti-brouillard avant", "Voyant pression pneu"], "a": 1, "n": 16}, {"q": "À quoi sert le liquide de refroidissement dans une voiture ?", "opts": ["Nettoyer le pare-brise", "Empêcher le moteur de surchauffer", "Graisser les pneus"], "a": 1, "n": 17}, {"q": "Que rejette une voiture qui fonctionne à l’hydrogène ?", "opts": ["De la fumée noire", "De la vapeur d'eau", "Du gaz d'échappement chargé en CO2"], "a": 1, "n": 18}, {"q": "Est ce qu’un avertisseur sonore HS passe au contrôle technique ?", "opts": ["Oui", "Non", "Je sais pas"], "a": 1, "n": 19}, {"q": "Où se trouve le réservoir de liquide de frein sous le capot ?", "opts": ["Sur le maître-cylindre", "Directement sur le radiateur", "Dans l’habitacle"], "a": 0, "n": 20}, {"q": "Sur quelle partie de la roue fixe-t-on les disques de frein ?", "opts": ["Sur la jante", "Sur le moyeu", "Sur le cardan"], "a": 1, "n": 21}, {"q": "Si mon niveau d’huile est trop faible je le réajuste ?", "opts": ["Avec le pinard à Dédé", "Avec de l’huile de colza", "Avec de l’huile que le garage me recommande", "avec de l’eau de javel"], "a": 2, "n": 22}, {"q": "Les bougies d’allumage sont montée sur quel type de moteur ?", "opts": ["Moteur essence", "Moteur diesel", "Moteur hydrogène"], "a": 0, "n": 23}, {"q": "À quelle fréquence doit-on vérifier la pression des pneus ?", "opts": ["Tous les 5 ans", "Une fois par mois environ", "Uniquement au contrôle technique"], "a": 1, "n": 24}, {"q": "À quoi sert le capteur appelé vulgairement « capteur PMH » ?", "answer": "À indiquer la position du vilebrequin pour caler l'injection et l'allumage. Il est normalement appelé capteur vitesse position.", "n": 25}, {"q": "Quels sont les 4 temps moteur dans l’ordre ?", "answer": "1. Admission ; 2. Compression ; 3. Combustion (ou Explosion/Détente) ; 4. Échappement.", "n": 26}, {"q": "Quel est l’ordre d’allumage classique sur un 4 cylindre ?", "answer": "1 - 3 - 4 - 2.", "n": 27}, {"q": "Quel est le niveau de pression maximum dans la rampe injection diesel ?", "answer": "Environ 200 à 2 200 bars sur les systèmes modernes à rampe commune.", "n": 28}, {"q": "Quel est le niveau de pression maximum dans la rampe injection indirecte essence ?", "answer": "Environ 3 à 5 bars en injection indirecte.", "n": 29}, {"q": "À quoi sert le déphaseur d'arbre à cames ?", "answer": "À faire varier le moment d'ouverture des soupapes selon le régime.", "n": 30}, {"q": "Quelle est la fonction de l’arbre à câme ?", "answer": "Commander l'ouverture et la fermeture des soupapes en synchronisation avec le vilebrequin.", "n": 31}, {"q": "Quel est le rapport stœchiométrique pour un moteur essence ?", "answer": "14,7 g d'air pour 1 g d'essence.", "n": 32}, {"q": "Quel outil utilise-t-on pour serrer une vis ou un écrou à une valeur précise ?", "answer": "Une clé dynamométrique.", "n": 33}, {"q": "Quelle pièce transforme le mouvement rectiligne des pistons en mouvement rotatif ?", "answer": "Le vilebrequin (via les bielles).", "n": 34}, {"q": "Quel composant régule la température du liquide de refroidissement vers le radiateur ?", "answer": "Le thermostat (ou calorstat).", "n": 35}, {"q": "Quelle est la couleur de la fumée d’échappement en cas de présence d’huile brûlée dans les cylindres ?", "answer": "Une fumée bleue (ou bleuâtre).", "n": 36}, {"q": "Quel est le rôle du maître-cylindre dans le système de freinage ?", "answer": "Transformer la force exercée sur la pédale de frein en pression hydraulique.", "n": 37}, {"q": "Quel composant permet aux roues motrices de tourner à des vitesses différentes dans un virage ?", "answer": "Le différentiel.", "n": 38}, {"q": "Quelle pièce relie le piston au vilebrequin ?", "answer": "La bielle.", "n": 39}, {"q": "Quel outil utilise-t-on pour contrôler le jeu aux soupapes ?", "answer": "Un jeu de cales d'épaisseur.", "n": 40}, {"q": "Que se passe t-il si mon jeu aux soupapes est trop faible ?", "answer": "La soupape ne ferme plus hermétiquement à chaud, entraînant des pertes de compression.", "n": 41}, {"q": "Quel gaz est mesuré par la sonde lambda pour ajuster la richesse du mélange ?", "answer": "L'oxygène.", "n": 42}, {"q": "À quoi sert le servofrein (ou Mastervac) ?", "answer": "À démultiplier la force d'appui sur la pédale de frein grâce à la dépression moteur.", "n": 43}, {"q": "Quel outil utilise-t-on pour mesurer la résistance d'un composant hors tension ?", "answer": "Un ohmmètre.", "n": 44}, {"q": "Dans une boîte manuelle, quelle pièce à cône permet d'égaliser la vitesse des pignons pour passer la vitesse sans craquer ?", "answer": "Le synchro (ou bague de synchronisation).", "n": 45}, {"q": "Combien de fils composent un réseau CAN High Speed classique ?", "answer": "2 fils (nommés CAN High et CAN Low).", "n": 46}, {"q": "Quel composant mécanique assure la liaison articulée entre le piston et la bielle ?", "answer": "L'axe de piston.", "n": 47}, {"q": "Comment appelle-t-on l'appareil servant à mesurer le voile d'un disque de frein ?", "answer": "Un comparateur.", "n": 48}];
+const form=document.getElementById('quiz');
+data.forEach((x,i)=>{
+ const c=document.createElement('div'); c.className='card';
+ let s='<h3>'+x.n+'. '+esc(x.q)+'</h3>';
+ if(x.opts){
+   x.opts.forEach((o,j)=>s+='<label class="option"><input type="radio" name="q'+i+'" value="'+j+'"> '+esc(o)+'</label>');
+ } else s+='<input type="text" name="q'+i+'" placeholder="Écris ta réponse">';
+ s+='<div class="correction" id="c'+i+'"></div>'; c.innerHTML=s; form.appendChild(c);
+});
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function grade(){
+ let score=0, answered=0, totalQcm=0;
+ data.forEach((x,i)=>{
+   const c=form.children[i], box=document.getElementById('c'+i);
+   c.querySelectorAll('.option').forEach(e=>e.classList.remove('correct','wrong'));
+   if(x.opts){
+     totalQcm++;
+     const r=form.querySelector('input[name="q'+i+'"]:checked');
+     if(r){answered++;let v=Number(r.value);
+       if(v===x.a){score++;r.parentElement.classList.add('correct')}
+       else {r.parentElement.classList.add('wrong');c.querySelectorAll('.option')[x.a].classList.add('correct')}
+       box.innerHTML='<b>Bonne réponse :</b> '+esc(x.opts[x.a]);box.style.display='block';
+     }
+   } else {
+     const inp=form.querySelector('input[name="q'+i+'"]');
+     if(inp.value.trim()) answered++;
+     box.innerHTML='<b>Réponse du PDF :</b> '+esc(x.answer);box.style.display='block';
+   }
+ });
+ document.getElementById('result').textContent='Score QCM : '+score+' / '+totalQcm+' — Questions répondues : '+answered+' / '+data.length;
+}
+</script></body></html>
